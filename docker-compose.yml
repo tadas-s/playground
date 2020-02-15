@@ -1,0 +1,35 @@
+# Compose file reference: https://docs.docker.com/compose/compose-file/
+version: '3.7'
+
+volumes:
+  postgresql:
+    external: false
+  tmp-cache:
+    external: false
+
+services:
+  postgresql:
+    container_name: playground.postgresql
+    image: postgres:12.2
+    environment:
+      POSTGRES_USER: playground
+      POSTGRES_PASSWORD: playground
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+
+  web:
+    container_name: playground.web
+    build:
+      context: .
+    depends_on:
+      - postgresql
+    command: web
+    ports:
+      - 127.0.0.1:3000:3000
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      DATABASE_URL: postgres://playground:playground@playground.postgresql/playground
+      DATABASE_URL_TEST: postgres://playground:playground@playground.postgresql/playground-test
+    volumes:
+      - tmp-cache:/app/tmp/cache

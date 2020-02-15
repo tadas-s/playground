@@ -1,0 +1,9 @@
+.dockerignore
+.git
+.gitignore
+.ruby-version
+.ruby-gemset
+log/*
+tmp/*
+Dockerfile
+docker-compose.yml

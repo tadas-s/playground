@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+case $1 in
+  "setup")
+    $CMD_PREFIX bundle exec rake db:setup
+    ;;
+  "migrate")
+    $CMD_PREFIX bundle exec rake db:migrate
+    ;;
+  "console")
+    $CMD_PREFIX bundle exec rails console
+    ;;
+  "web")
+    $CMD_PREFIX bundle exec rails server
+    ;;
+  *)
+    # Otherwise just shell exec the whole thing
+    $CMD_PREFIX sh -c "${*}"
+    ;;
+esac

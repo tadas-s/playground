@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+case $1 in
+  "setup")
+    bundle exec rails db:setup
+    ;;
+  "migrate")
+    bundle exec rails db:migrate
+    ;;
+  "console")
+    bundle exec rails console
+    ;;
+  "web")
+    bundle exec rails server -b 0.0.0.0
+    ;;
+  *)
+    # Otherwise just shell exec the whole thing
+    $CMD_PREFIX sh -c "${*}"
+    ;;
+esac

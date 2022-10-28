@@ -1,0 +1,38 @@
+version: "3.8"
+
+volumes:
+  db-data: { external: false }
+  tmp-cache: { external: false }
+
+services:
+
+  postgres:
+    container_name: ruby.postgres
+    image: postgres:15.0
+    init: true
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ruby-rails
+      POSTGRES_PASSWORD: ruby-rails
+      POSTGRES_DB: postgres
+
+  web:
+    container_name: ruby.web
+    depends_on:
+      - postgres
+    build:
+      context: .
+      target: development
+    init: true
+    volumes:
+      - tmp-cache:/app/tmp/cache
+    environment:
+      RAILS_ENV: development
+      RAILS_MAX_THREADS: 20
+      RAILS_MIN_THREADS: 1
+      DATABASE_URL: postgres://ruby-rails:ruby-rails@ruby.postgres/ruby-rails-development
+      DATABASE_URL_TEST: postgres://ruby-rails:ruby-rails@ruby.postgres/ruby-rails-test
+    ports:
+      - '127.0.0.1:3000:3000'
+    command: web
